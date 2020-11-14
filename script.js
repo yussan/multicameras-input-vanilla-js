@@ -27,6 +27,7 @@ function init() {
           navigator.mediaDevices
             .enumerateDevices()
             .then((devices) => {
+              await navigator.mediaDevices.getUserMedia({video: true}); 
               var cams = devices.filter(
                 (device) => device.kind == "videoinput"
               );
