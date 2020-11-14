@@ -12,7 +12,7 @@ function init() {
     // check permission
     navigator.permissions
       .query({ name: "camera" })
-      .then((permissionObj) => {
+      .then(async (permissionObj) => {
         console.log(permissionObj);
 
         if (["prompt", "granted"].includes(permissionObj.state)) {
@@ -23,11 +23,12 @@ function init() {
           ELVideo.height = ElView.offsetHeight;
           ELVideo.width = ElView.offsetWidth;
 
+          await navigator.mediaDevices.getUserMedia({ video: true });
+
           // count total cameras
           navigator.mediaDevices
             .enumerateDevices()
             .then((devices) => {
-              await navigator.mediaDevices.getUserMedia({video: true}); 
               var cams = devices.filter(
                 (device) => device.kind == "videoinput"
               );
@@ -56,6 +57,9 @@ function init() {
             .catch((err) => {
               console.error(err);
             });
+        } else {
+          const err = "Access camera denied";
+          return showError(err, err);
         }
       })
       .catch((err) => {
