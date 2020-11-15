@@ -1,5 +1,6 @@
 const ElView = document.getElementById("cam__viewfinder");
 const ElSelect = document.getElementById("cam__select");
+let ElVideo = null;
 
 // global variable
 let stream = null;
@@ -19,7 +20,7 @@ function init() {
           // render video tag
           ElView.innerHTML = "<video id='cam__video'></video>";
 
-          const ELVideo = document.getElementById("cam__video");
+          ELVideo = document.getElementById("cam__video");
           ELVideo.height = ElView.offsetHeight;
           ELVideo.width = ElView.offsetWidth;
 
@@ -37,21 +38,7 @@ function init() {
                 console.log("cams", cams);
 
                 renderAvailableCameras(cams);
-
-                return navigator.mediaDevices
-                  .getUserMedia({
-                    video: {
-                      width: 1280,
-                      height: 720,
-                      deviceId: { exact: cams[0].deviceId },
-                    },
-                  })
-                  .then((stream) => {
-                    ELVideo.srcObject = stream;
-                    ELVideo.onloadedmetadata = function (e) {
-                      ELVideo.play();
-                    };
-                  });
+                handleSelectCam(cams[0].deviceId);
               }
             })
             .catch((err) => {
@@ -71,11 +58,29 @@ function init() {
   }
 }
 
+// function to handle select camera
+function handleSelectCam(deviceId) {
+  navigator.mediaDevices
+    .getUserMedia({
+      video: {
+        width: 1280,
+        height: 720,
+        deviceId: { exact: deviceId },
+      },
+    })
+    .then((stream) => {
+      ELVideo.srcObject = stream;
+      ELVideo.onloadedmetadata = function (e) {
+        ELVideo.play();
+      };
+    });
+}
+
 // render available cameras
 function renderAvailableCameras(cams = []) {
   let options = "";
   cams.map((n) => {
-    options += `<option data-deviceid="${n.deviceId}" >${n.label}</option>`;
+    options += `<option onClick="handleSelectCam(${n.deviceId})" data-deviceid="${n.deviceId}" >${n.label}</option>`;
   });
 
   return (ElSelect.innerHTML = options);
