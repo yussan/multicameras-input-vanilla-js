@@ -80,7 +80,7 @@ function handleSelectCam(deviceId) {
 function renderAvailableCameras(cams = []) {
   let options = "";
   cams.map((n) => {
-    options += `<option onClick="handleSelectCam(${n.deviceId})" data-deviceid="${n.deviceId}" >${n.label}</option>`;
+    options += `<option onclick="handleSelectCam(${n.deviceId})" data-deviceid="${n.deviceId}" >${n.label}</option>`;
   });
 
   return (ElSelect.innerHTML = options);
