@@ -8,6 +8,7 @@ let stream = null;
 // check camera permission
 init();
 
+// start programs
 function init() {
   if ("mediaDevices" in navigator && "getUserMedia" in navigator.mediaDevices) {
     // check permission
@@ -58,6 +59,12 @@ function init() {
   }
 }
 
+// ElSelect onchange listener
+ElSelect.addEventListener("change", function (e) {
+  console.log(e.target.value);
+  handleSelectCam(e.target.value);
+});
+
 // function to handle select camera
 function handleSelectCam(deviceId) {
   navigator.mediaDevices
@@ -80,7 +87,7 @@ function handleSelectCam(deviceId) {
 function renderAvailableCameras(cams = []) {
   let options = "";
   cams.map((n) => {
-    options += `<option onclick="handleSelectCam(${n.deviceId})" data-deviceid="${n.deviceId}" >${n.label}</option>`;
+    options += `<option value="${n.deviceId}" >${n.label}</option>`;
   });
 
   return (ElSelect.innerHTML = options);
